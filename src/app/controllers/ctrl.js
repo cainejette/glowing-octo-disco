@@ -9,6 +9,15 @@ angular.module('werethey').controller('ctrl',
                     data['no results'] = [{name: ':('}];
                 }
                 $scope.hits = data;
+                Object.keys($scope.hits).forEach(guestStar => {
+                    $scope.hits[guestStar].forEach(episode => {
+                        var pic = episode.guest_stars.filter(x => x.name.indexOf(guestStar) >= 0)[0].profile_path;
+                        console.log('pic: [' + pic + ']');
+                        if (pic != null) {
+                            episode.pic = 'https://image.tmdb.org/t/p/w45_and_h45_bestv2' + pic;
+                        } 
+                    });
+                });
             });
         };
 

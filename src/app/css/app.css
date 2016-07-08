@@ -51,6 +51,11 @@ input {
   color: white;
 }
 
+img {
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+}
+
 a {
     color: white !important;
     text-decoration: none;
