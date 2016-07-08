@@ -7,7 +7,9 @@ const bodyParser = require('body-parser');
 const jsonQuery = require('json-query');
 const fs = require('fs');
 
-const secrets = require('../secrets.json');
+secrets = {};
+secrets.apiKey = process.env.API_KEY || require('../secrets.json').apiKey;
+
 var data = require('../data.json');
 var data2 = require('../data2.json');
 Object.keys(data2).forEach(key => {
