@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html ng-app="werethey">
+
+<head>
+  <title>were they?</title>
+  <link rel="stylesheet" href="css/app.css" />
+  
+  <script src="https://code.angularjs.org/1.2.16/angular.js"></script>
+  <script src="app.js"></script>
+  <script src="controllers/ctrl.js"></script>
+  <script src="services/api.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+    crossorigin="anonymous">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+    crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+  <div class="laworder container-fluid">
+    <div ng-controller="ctrl">
+      <div class="row">
+        <form name="myForm" class="col-sm-12"" ng-submit="submit()" >
+          <input id="input" name="input" align="center" ng-model="name" placeholder="name" required>
+          <br />
+          <input type="submit" id="submit" value="check"  />
+        </form>
+      </div>
+      <div class="row result">
+        <div ng-repeat="hit in hits">
+          <div>{{ hit }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

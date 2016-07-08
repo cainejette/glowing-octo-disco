@@ -1,0 +1,66 @@
+.rando {
+  background-color: black;
+  color: white;
+  position: relative;
+  text-transform: lowercase;
+}
+
+body {
+  padding: 10px;
+  background-color: black !important;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 4em;
+}
+
+h1 {
+  font-size: 4em !important;
+}
+
+form {
+  margin: 0 auto;
+  display: block;
+  text-align: center;
+}
+
+#input {
+  color: black !important;
+  width: 80%;
+  padding: 20px 20px;
+  text-align: center;
+}
+
+#input_container { 
+  position:relative; 
+  padding:0;
+  margin:0; 
+}
+
+input {
+  color: black !important;
+  text-align: center;
+}
+
+#submit {
+  width: 30%;
+}
+
+.result {
+  padding-top: 30px;
+  text-align: center;
+  font-size: 4vw;
+  color: white;
+}
+
+a {
+    color: white !important;
+    text-decoration: none;
+}
+
+a:hover, a:focus {
+    color: white !important;
+    text-decoration: underline;
+}
+
+::-webkit-input-placeholder {
+   color: grey;
+}
