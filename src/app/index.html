@@ -32,11 +32,16 @@
         </form>
       </div>
       <div class="row result">
-        <div ng-repeat="(name, episodes) in hits">
+        <div ng-if="hasHits">
+          <div ng-repeat="(name, episodes) in hits">
           <div ng-repeat="episode in episodes">
             <img ng-if="episode.pic" ng-src="{{ episode.pic }}" />
-            <a ng-click="getLink(episode.name, episode.air_date)">{{ name }}: {{ episode.name }} ({{ episode.show_name }} S{{ episode.season_number }} E{{ episode.episode_number }})</a>
+            <a ng-click="getLink(episode.name, episode.air_date)">{{ name }} was in {{ episode.name }} ({{ episode.show_name }} S{{ episode.season_number }} E{{ episode.episode_number }})</a>>
           </div>
+        </div>
+        </div>
+        <div ng-if="!hasHits">
+          <div>guess not :(</div>
         </div>
       </div>
     </div>
