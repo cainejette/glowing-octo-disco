@@ -22,8 +22,11 @@
   <div class="laworder container-fluid">
     <div ng-controller="ctrl">
       <div class="row">
+        <div class="result">were they on law & order?</div>
+        <br />
         <form name="myForm" class="col-sm-12"" ng-submit="submit()" >
           <input id="input" name="input" align="center" ng-model="name" placeholder="name" required>
+          <br />
           <br />
           <input type="submit" id="submit" value="check"  />
         </form>
@@ -32,7 +35,7 @@
         <div ng-repeat="(name, episodes) in hits">
           <div ng-repeat="episode in episodes">
             <img ng-if="episode.pic" ng-src="{{ episode.pic }}" />
-            <a ng-click="getLink(episode.name, episode.air_date)">{{ name }}: {{ episode.name }}</a>
+            <a ng-click="getLink(episode.name, episode.air_date)">{{ name }}: {{ episode.name }} ({{ episode.show_name }} S{{ episode.season_number }} E{{ episode.episode_number }})</a>
           </div>
         </div>
       </div>

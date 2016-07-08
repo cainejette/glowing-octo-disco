@@ -9,6 +9,7 @@ angular.module('werethey').controller('ctrl',
                     data['no results'] = [{name: ':('}];
                 }
                 $scope.hits = data;
+                console.dir(data);
                 Object.keys($scope.hits).forEach(guestStar => {
                     $scope.hits[guestStar].forEach(episode => {
                         var pic = episode.guest_stars.filter(x => x.name.indexOf(guestStar) >= 0)[0].profile_path;

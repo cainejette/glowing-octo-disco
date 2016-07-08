@@ -41,20 +41,21 @@ router.get('/api/actor', (req, res) => {
     var guestStars = {};
     request({
         method: 'GET',
-        url: 'http://api.themoviedb.org/3/tv/549?api_key=' + secrets.apiKey,
+        url: 'http://api.themoviedb.org/3/tv/2734?api_key=' + secrets.apiKey,
         headers: { 'Accept': 'application/json' }
     }, (error, response, seasonBody) => {
         var seasonData = JSON.parse(seasonBody);
-        
+        console.dir(seasonData);
         seasonData.seasons.forEach(season => {
             request({
                 method: 'GET',
-                url: 'http://api.themoviedb.org/3/tv/549/season/' + season.season_number + '?api_key=' + secrets.apiKey,
+                url: 'http://api.themoviedb.org/3/tv/2734/season/' + season.season_number + '?api_key=' + secrets.apiKey,
                 headers: { 'Accept': 'application/json' }
             }, (error2, response2, episodeBody) => {
                 var episodeData = JSON.parse(episodeBody);
 
                 episodeData.episodes.forEach(ep => {
+                    ep.show_name = seasonData.name;
                     ep.guest_stars.forEach(guestStar => {
                         if (guestStars[guestStar.name]) {
                             guestStars[guestStar.name].push(ep); 
@@ -64,7 +65,7 @@ router.get('/api/actor', (req, res) => {
                     });
                 });
 
-                fs.writeFile('data.json', JSON.stringify(guestStars), (err) => {
+                fs.writeFile('data2.json', JSON.stringify(guestStars), (err) => {
                     if (err) throw err;
                     console.log('saved!');
                 })

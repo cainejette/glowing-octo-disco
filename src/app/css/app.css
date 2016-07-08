@@ -47,13 +47,14 @@ input {
 .result {
   padding-top: 30px;
   text-align: center;
-  font-size: 4vw;
+  font-size: 2vw;
   color: white;
 }
 
 img {
   border-radius: 50%;
   -webkit-border-radius: 50%;
+  border: 1px solid white !important;
 }
 
 a {
