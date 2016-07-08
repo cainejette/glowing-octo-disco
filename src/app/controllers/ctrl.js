@@ -6,6 +6,7 @@ angular.module('werethey').controller('ctrl',
         const checkListings = (name) => {
             api.checkListings(name).then(data => {
                 $scope.hits = data;
+                console.dir($scope.hits);
             });
         };
 

@@ -7,9 +7,7 @@ const bodyParser = require('body-parser');
 const jsonQuery = require('json-query');
 const fs = require('fs');
 
-
 const secrets = require('../secrets.json');
-
 var data = require('../data.json');
 var data2 = require('../data2.json');
 Object.keys(data2).forEach(key => {
@@ -76,12 +74,12 @@ router.get('/api/actor', (req, res) => {
 });
 
 router.post('/api/check', (req, res) => {
-    var hits = [];
+    var hits = {};
 
     Object.keys(data).forEach(key => {
         var index = key.toLowerCase().indexOf(req.body.name.toLowerCase())
         if (index >= 0) {
-            hits.push(key);
+            hits[key] = data[key];
         }
     });
 

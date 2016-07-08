@@ -29,8 +29,10 @@
         </form>
       </div>
       <div class="row result">
-        <div ng-repeat="hit in hits">
-          <div>{{ hit }}</div>
+        <div ng-repeat="(name, episodes) in hits">
+          <div ng-repeat="episode in episodes">
+            <div>{{ name }}: {{ episode.name }}</div>
+          </div>
         </div>
       </div>
     </div>
