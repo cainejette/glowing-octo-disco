@@ -86,6 +86,21 @@ router.post('/api/check', (req, res) => {
     res.send(hits);
 });
 
+router.post('/api/link', (req, res) => {
+    request({
+        method: 'GET',
+        url: 'http://www.imdb.com/find?ref_=nv_sr_fn&q=' + encodeURIComponent('Law & Order ' + req.body.name + ' ' + req.body.year),
+        headers: { 'Accept': 'application/json' }
+    }, (error, response, body) => {
+
+        var startIndex = body.indexOf('href="/title/tt') + 6;
+        var nextQuote = body.substring(startIndex).indexOf('"');
+        var target = body.substring(startIndex, startIndex + nextQuote);
+
+        res.send({ link: target });
+    })
+});
+
 app.use('/', router);
 
 app.listen(port, () => {

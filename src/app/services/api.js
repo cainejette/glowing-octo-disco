@@ -13,7 +13,21 @@ angular.module('werethey').factory('api', ['$http', '$q', function ($http, $q) {
     return deferred.promise;
   }
 
+  const getLink = (name, year) => {
+    const deferred = $q.defer();
+
+    $http.post('/api/link/', { name, year })
+      .success(data => deferred.resolve(data))
+      .error(err => {
+        console.log('Error fetching from: ' + url);
+        deferred.reject(err);
+      });
+
+    return deferred.promise;
+  }
+
   return {
-    checkListings
+    checkListings,
+    getLink
   };
 }]);

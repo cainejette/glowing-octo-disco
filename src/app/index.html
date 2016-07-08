@@ -31,7 +31,7 @@
       <div class="row result">
         <div ng-repeat="(name, episodes) in hits">
           <div ng-repeat="episode in episodes">
-            <div>{{ name }}: {{ episode.name }}</div>
+            <a ng-click="getLink(episode.name, episode.air_date)">{{ name }}: {{ episode.name }}</a>
           </div>
         </div>
       </div>

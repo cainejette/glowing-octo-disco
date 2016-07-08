@@ -54,6 +54,7 @@ input {
 a {
     color: white !important;
     text-decoration: none;
+    cursor: pointer;
 }
 
 a:hover, a:focus {
