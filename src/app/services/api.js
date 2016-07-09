@@ -1,7 +1,7 @@
 angular.module('werethey').factory('api', ['$http', '$q', function ($http, $q) {
 
-  const checkListings = (name) => {
-    const deferred = $q.defer();
+  var checkListings = (name) => {
+    var deferred = $q.defer();
 
     $http.post('/api/check/', { name })
       .success(data => deferred.resolve(data))
@@ -13,8 +13,8 @@ angular.module('werethey').factory('api', ['$http', '$q', function ($http, $q) {
     return deferred.promise;
   }
 
-  const getLink = (name, year) => {
-    const deferred = $q.defer();
+  var getLink = (name, year) => {
+    var deferred = $q.defer();
 
     $http.post('/api/link/', { name, year })
       .success(data => deferred.resolve(data))

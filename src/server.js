@@ -1,26 +1,21 @@
-const express = require('express');
-const proxy = require('http-proxy');
-const app = express();
-const request = require('request');
-const moment = require('moment');
-const bodyParser = require('body-parser');
-const jsonQuery = require('json-query');
-const fs = require('fs');
+var express = require('express');
+var proxy = require('http-proxy');
+var app = express();
+var rp = require('request-promise');
+var moment = require('moment');
+var bodyParser = require('body-parser');
+var jsonQuery = require('json-query');
+var fs = require('fs');
+var suspend = require('suspend');
+var sleep = require('sleep');
 
-secrets = {};
+var limit = require('simple-rate-limiter');
+var request = limit(require('request')).to(1).per(500);
+
+var secrets = {};
 secrets.apiKey = process.env.API_KEY || require('../secrets.json').apiKey;
 
-var data = require('../data.json');
-var data2 = require('../data2.json');
-Object.keys(data2).forEach(key => {
-    if (data[key]) {
-        data2[key].forEach(ep => data[key].push(ep));
-    } else {
-        data[key] = data2[key];
-    }
-});
-
-const port = process.env.PORT || 3000;
+var port = process.env.PORT || 3043;
 
 app.set('port', port);
 app.use(express.static(__dirname + '/app'));
@@ -31,46 +26,58 @@ proxy.prototype.onError = (err) => {
     console.log(err);
 }
 
-const router = express.Router();
-const api = proxy.createProxyServer({ changeOrigin: false });
+var router = express.Router();
+var api = proxy.createProxyServer({ changeOrigin: false });
 
 router.use((req, res, next) => {
     console.log(moment().format('h:mm:ss a'), req.method, req.url);
     next();
 });
 
-router.get('/api/actor', (req, res) => {
-    var guestStars = {};
-    request({
-        method: 'GET',
-        url: 'http://api.themoviedb.org/3/tv/2734?api_key=' + secrets.apiKey,
-        headers: { 'Accept': 'application/json' }
-    }, (error, response, seasonBody) => {
-        var seasonData = JSON.parse(seasonBody);
-        console.dir(seasonData);
-        seasonData.seasons.forEach(season => {
+var showIds = [549, 2734, 4601, 7098, 32632, 3357]
+var showPromises = [];
+showIds.forEach(showId => {
+    showPromises.push(
+        rp({
+            method: 'GET',
+            url: 'http://api.themoviedb.org/3/tv/' + showId + '?api_key=' + secrets.apiKey,
+            headers: { 'Accept': 'application/json' }
+        })
+    );
+});
+
+guestStars = {};
+Promise.all(showPromises).then(showResponses => {
+    showResponses.forEach(showResponse => {
+        var showData = JSON.parse(showResponse);
+        showData.seasons.forEach(season => {
             request({
                 method: 'GET',
-                url: 'http://api.themoviedb.org/3/tv/2734/season/' + season.season_number + '?api_key=' + secrets.apiKey,
+                url: 'http://api.themoviedb.org/3/tv/' + showData.id + '/season/' + season.season_number + '?api_key=' + secrets.apiKey,
                 headers: { 'Accept': 'application/json' }
-            }, (error2, response2, episodeBody) => {
-                var episodeData = JSON.parse(episodeBody);
+            }, (err, res, body) => {
+                if (err) {
+                    console.error('error!');
+                    console.dir(err);
+                    return;
+                }
 
-                episodeData.episodes.forEach(ep => {
-                    ep.show_name = seasonData.name;
-                    ep.guest_stars.forEach(guestStar => {
-                        if (guestStars[guestStar.name]) {
-                            guestStars[guestStar.name].push(ep); 
-                        } else {
-                            guestStars[guestStar.name] = [ep];
-                        }
+                var seasonData = JSON.parse(body);
+                if (seasonData.episodes) {
+                    seasonData.episodes.forEach(episode => {
+                        episode.show_name = showData.name;
+                        episode.guest_stars.forEach(guestStar => {
+                            if (guestStars[guestStar.name]) {
+                                guestStars[guestStar.name].push(episode);
+                            } else {
+                                guestStars[guestStar.name] = [episode];
+                            }
+                        });
                     });
-                });
-
-                fs.writeFile('data2.json', JSON.stringify(guestStars), (err) => {
-                    if (err) throw err;
-                    console.log('saved!');
-                })
+                    console.log('loaded ' + seasonData.episodes.length + ' episodes from season ' + seasonData.season_number + ' of ' + showData.name + '. guest star count: ' + Object.keys(guestStars).length);
+                } else {
+                    console.dir(seasonData);
+                }
             });
         });
     });
@@ -79,10 +86,10 @@ router.get('/api/actor', (req, res) => {
 router.post('/api/check', (req, res) => {
     var hits = {};
 
-    Object.keys(data).forEach(key => {
+    Object.keys(guestStars).forEach(key => {
         var index = key.toLowerCase().indexOf(req.body.name.toLowerCase())
         if (index >= 0) {
-            hits[key] = data[key];
+            hits[key] = guestStars[key];
         }
     });
 

@@ -5,7 +5,7 @@ angular.module('werethey').controller('ctrl',
 
         // default to this to hide guess not message on load
         $scope.hasHits = true;
-        const checkListings = (name) => {
+        var checkListings = (name) => {
             api.checkListings(name).then(data => {
                 $scope.hasHits = Object.keys(data).length > 0;
                 $scope.hits = data;
