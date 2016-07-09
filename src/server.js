@@ -1,21 +1,19 @@
 var express = require('express');
 var proxy = require('http-proxy');
 var app = express();
-var rp = require('request-promise');
 var moment = require('moment');
 var bodyParser = require('body-parser');
 var jsonQuery = require('json-query');
-var fs = require('fs');
-var suspend = require('suspend');
-var sleep = require('sleep');
 
 var limit = require('simple-rate-limiter');
 var request = limit(require('request')).to(1).per(500);
+var rp = require('request-promise');
+
 
 var secrets = {};
 secrets.apiKey = process.env.API_KEY || require('../secrets.json').apiKey;
 
-var port = process.env.PORT || 3043;
+var port = process.env.PORT || 3000;
 
 app.set('port', port);
 app.use(express.static(__dirname + '/app'));
